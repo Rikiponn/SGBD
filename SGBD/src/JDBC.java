@@ -11,13 +11,15 @@ public class JDBC {
 	private JDBC() throws SQLException, ClassNotFoundException{
 		Class.forName("oracle.jdbc.driver.OracleDriver");
 
+		ParserXPath xpath = new ParserXPath();
+		ArrayList<String> str = new ArrayList<String>();
 		try {
-		String url = "jdbc:oracle:thin:@localhost:1521/xe";
-		String user = "timothee";
-		String mdp = "root";
-		
-		connection = DriverManager.getConnection(url, user, mdp);
-		connection.setAutoCommit(true);
+			str = xpath.getInfo();
+			String url = str.get(1);
+			String user = str.get(2);
+			String mdp = str.get(3);
+			connection = DriverManager.getConnection(url, user, mdp);
+			connection.setAutoCommit(true);
 		}catch(Exception z) {
 			z.printStackTrace();
 		}
