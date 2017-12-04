@@ -285,7 +285,7 @@ public class Menu {
 				System.out.println("Ajoutez un moniteur pour cette s�ance (identifi� par son adresse mail)");
 				afficheMoniteur();
 				int numMoniteur = sc.nextInt();
-				String mail = moniteurList.get(numMoniteur);
+				String mail = moniteurList.get(numMoniteur-1);
 				seance.addMoniteur(mail);
 				System.out.println("Ajouter un moniteur suppl�mentaire?\n[1]Oui\n[2]Non");
 				plusMoniteur = sc.nextInt();
@@ -809,7 +809,7 @@ public class Menu {
 						adr = new Adresse(0,rS2.getString("rue"), rS2.getString("codePostal"), rS2.getString("ville"));
 					}
 					finally {
-						adr = new Adresse(Integer.parseInt(rS2.getString("numero")),rS2.getString("rue"), rS2.getString("codePostal"), rS2.getString("ville"));
+						adr = new Adresse(rS2.getString("rue"), rS2.getString("codePostal"), rS2.getString("ville"));
 					}
 
 					adr.setUid(Integer.parseInt(rS2.getString("uidAdresse")));
@@ -1046,7 +1046,7 @@ public class Menu {
 		ResultSet rS;
 		try{
 			pS = jdbc.getConnection().prepareStatement("INSERT INTO Materiel (uidMateriel,uidCentre,type,marque,modele,niveau,stock) VALUES (?,?,?,?,?,?,?)");
-			pS.setString(1, Integer.toString(materielList.size()+1));
+			pS.setString(1, String.format("%010d",materielList.size()+1));
 			pS.setString(2, String.format("%010d", uidCentre));
 			pS.setString(3, materiel.type);
 			pS.setString(4, materiel.marque);

@@ -153,6 +153,7 @@ CREATE TABLE Seance(
     uidCentre CHAR(10),
     uidGroupe CHAR(10),
     dateSeance date NOT NULL,
+    heureDebut number(*,0) NOT NULL,
     duree number(*,2) NOT NULL,
     CONSTRAINT pk_Seance PRIMARY KEY(uidSeance, uidActivite, uidCentre),
     CONSTRAINT fk_Seance_uidAct_Centr FOREIGN KEY (uidActivite,uidCentre) REFERENCES Activite(uidActivite,uidCentre),
