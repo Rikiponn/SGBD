@@ -11,6 +11,8 @@ import javax.naming.spi.DirStateFactory.Result;
 import javax.swing.DefaultSingleSelectionModel;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 
+import oracle.net.jdbc.TNSAddress.AddressList;
+
 public class Menu {
 
 	//Un hashset c'est chiant pour acc�der aux �l�ments du coup j'ai mis une list normal pour l'instant. 
@@ -173,10 +175,7 @@ public class Menu {
 				
 			}while(choix==1);
 			getAdresses();
-			int uid = 1;
-			for(Adresse tempadd : adresseList)
-				uid++;
-			adresse.uidAdresse = uid;
+			adresse.setUid(adresseList.size()+1);
 			Stagiaire stagiaire = new Stagiaire(nom, prenom, mail, tel, date, adresse, activiteList, niveauList);
 			ajouteAdresseList(adresseList, adresse);
 			
@@ -744,10 +743,7 @@ public class Menu {
 				Adresse adr = new Adresse(rS3.getInt(2),rS3.getString(3), rS3.getString(4), rS3.getString(5));
 				
 				getAdresses();
-				int uid = 1;
-				for(Adresse tempadd : adresseList)
-					uid++;
-				adr.uidAdresse = uid;
+				adr.uidAdresse = adresseList.size()+1;
 				
 				Date d = new Date(rS2.getDate(5).getDay(), rS2.getDate(5).getMonth(), rS2.getDate(5).getYear());
 				Stagiaire stagiaire = new Stagiaire(rS2.getString(3), rS2.getString(4), rS2.getString(1), rS2.getString(6), d, adr);
