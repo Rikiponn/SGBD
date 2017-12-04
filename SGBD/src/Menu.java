@@ -172,8 +172,14 @@ public class Menu {
 				}
 				
 			}while(choix==1);
-
+			getAdresses();
+			int uid = 1;
+			for(Adresse tempadd : adresseList)
+				uid++;
+			adresse.uidAdresse = uid;
 			Stagiaire stagiaire = new Stagiaire(nom, prenom, mail, tel, date, adresse, activiteList, niveauList);
+			ajouteAdresseList(adresseList, adresse);
+			
 			stagiaire.setDebut(debut);
 			stagiaire.setFin(fin);
 			inscrireStagiaire(stagiaire);
@@ -385,6 +391,15 @@ public class Menu {
 			System.out.println("Ville :");
 			String ville = sc.next();
 			Adresse adresse = new Adresse(numRue, rue, CP, ville);
+			
+			getAdresses();
+			int uid = 1;
+			for(Adresse tempadd : adresseList)
+				uid++;
+			adresse.uidAdresse = uid;
+			
+			ajouteAdresseList(adresseList, adresse);
+			
 			Moniteur moniteur = new Moniteur(nom3, prenom3, mail3, tel, date2, adresse);
 			int encore = 2;
 			do{
@@ -486,8 +501,11 @@ public class Menu {
 		try {
 			pS = jdbc.getConnection().prepareStatement("SELECT * FROM Adresse");
 			ResultSet rS = pS.executeQuery();
+			adresseList.clear();
 			while(rS.next()) {
-				Adresse adr = new Adresse(Integer.parseInt(rS.getString("uidAdresse")), rS.getString("numero"), rS.getString("codePostal"), rS.getString("ville"));
+				Adresse adr = new Adresse(Integer.parseInt(rS.getString("numero")), rS.getString("rue"), rS.getString("codePostal"), rS.getString("ville"));
+				adr.setUid(Integer.parseInt(rS.getString("uidAdresse")));
+				
 				ajouteAdresseList(adresseList, adr);
 			}
 			
@@ -531,7 +549,7 @@ public class Menu {
 				PreparedStatement pS2 = jdbc.getConnection().prepareStatement("INSERT INTO Inscription (uidActivite,uidCentre,mail,dateDebut,dateFin) VALUES (?,?,?,?,?)");
 				pS2.setString(1,String.format("%010d", activiteList.get(i-1).getUid()));
 				pS2.setString(2,String.format("%010d", activiteList.get(i-1).getCentre()));
-				//System.out.println(String.format("%010d", activiteList.get(i-1).getCentre())+String.format("%010d", activiteList.get(i-1).getUid()));
+				System.out.println(String.format("%010d", activiteList.get(i-1).getCentre())+String.format("%010d", activiteList.get(i-1).getUid()));
 				pS2.setString(3,stagiaire.getMail());
 				pS2.setDate(4, debut);
 				pS2.setDate(5, fin);
@@ -725,6 +743,12 @@ public class Menu {
 				ResultSet rS3 = pS3.executeQuery();
 				Adresse adr = new Adresse(rS3.getInt(2),rS3.getString(3), rS3.getString(4), rS3.getString(5));
 				
+				getAdresses();
+				int uid = 1;
+				for(Adresse tempadd : adresseList)
+					uid++;
+				adr.uidAdresse = uid;
+				
 				Date d = new Date(rS2.getDate(5).getDay(), rS2.getDate(5).getMonth(), rS2.getDate(5).getYear());
 				Stagiaire stagiaire = new Stagiaire(rS2.getString(3), rS2.getString(4), rS2.getString(1), rS2.getString(6), d, adr);
 				ajouteStagiaireList(stagiaireList, stagiaire);
@@ -781,10 +805,10 @@ public class Menu {
 						rS2.getString("numero");
 					}
 					catch(NullPointerException e){
-						adr = new Adresse(rS2.getString("rue"), rS2.getString("codePostal"), rS2.getString("ville"));
+						adr = new Adresse(0,rS2.getString("rue"), rS2.getString("codePostal"), rS2.getString("ville"));
 					}
 					finally {
-						adr = new Adresse(rS2.getString("rue"), rS2.getString("codePostal"), rS2.getString("ville"));
+						adr = new Adresse(Integer.parseInt(rS2.getString("numero")),rS2.getString("rue"), rS2.getString("codePostal"), rS2.getString("ville"));
 					}
 
 					adr.setUid(Integer.parseInt(rS2.getString("uidAdresse")));
