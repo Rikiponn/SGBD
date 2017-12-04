@@ -317,19 +317,20 @@ public class Menu {
 							System.out.println("Indiquez la quantit� � ajouter");
 							int qte = sc.nextInt();
 							ajoutMateriel(materiel, qte);
+						}else {
+							System.out.println("Indiquez le type de materiel");
+							String type = sc.next();
+							System.out.println("Indiquez la marque");
+							String marque = sc.next();
+							System.out.println("Indiquez le mod�le");
+							String modele = sc.next();
+							System.out.println("Indiquez le niveau\n[1]D�butant\n[2]Confirm�\n[3]Expert");
+							int niveau = sc.nextInt();
+							System.out.println("Indiquez la quantite de materiel � ajouter");
+							int qte = sc.nextInt();
+							Materiel matos = new Materiel(type, marque, modele, niveau, qte);
+							ajoutMateriel(matos);
 						}
-						System.out.println("Indiquez le type de materiel");
-						String type = sc.next();
-						System.out.println("Indiquez la marque");
-						String marque = sc.next();
-						System.out.println("Indiquez le mod�le");
-						String modele = sc.next();
-						System.out.println("Indiquez le niveau\n[1]D�butant\n[2]Confirm�\n[3]Expert");
-						int niveau = sc.nextInt();
-						System.out.println("Indiquez la quantite de materiel � ajouter");
-						int qte = sc.nextInt();
-						Materiel matos = new Materiel(type, marque, modele, niveau, qte);
-						ajoutMateriel(matos);
 						
 						System.out.println("Ajouter encore du mat�riel?\n[1]Oui\n[2]Non");
 						encore = sc.nextInt();
@@ -1068,13 +1069,13 @@ public class Menu {
 		ResultSet rS;
 		try{
 			pS = jdbc.getConnection().prepareStatement("SELECT stock FROM Materiel WHERE uidMateriel=?");
-			pS.setString(1, String.format("%010d",materielList.get(num).getUid()));
+			pS.setString(1, String.format("%010d",materielList.get(num-1).getUid()));
 			rS = pS.executeQuery();
 			int stock = rS.getInt("stock");
 			stock+=qte;
 			pS = jdbc.getConnection().prepareStatement("UPDATE Materiel SET stock=? WHERE uidMateriel=?");
 			pS.setInt(1, stock);
-			pS.setString(2, Integer.toString(materielList.get(num).getUid()));
+			pS.setString(2, Integer.toString(materielList.get(num-1).getUid()));
 			rS = pS.executeQuery();
 			System.out.println("\n[OK] Mat�riel ajout�\n");
 		}
