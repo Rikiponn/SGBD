@@ -277,7 +277,7 @@ public class Menu {
 			System.out.println("Indiquez la dur�e de la s�ance (en minutes)");
 			int duree = sc.nextInt();
 			int plusMatos = 0;
-			
+			getSeances();
 			Seance seance = new Seance(numGroupe, numActivite, duree, date, seanceList.size()+1);
 			int plusMoniteur = 2;
 			getMoniteur(numActivite);
@@ -381,7 +381,7 @@ public class Menu {
 			String tel = sc.next();
 			System.out.println("Date de naissance (jj/mm/aaaa)");
 			String naissance2 = sc.next();
-			Date date2 = new Date(naissance2);
+			Date date2 = new Date(naissance2); 
 			System.out.println("Num�ro de rue :");
 			int numRue = sc.nextInt();
 			System.out.println("Rue :");
@@ -552,7 +552,6 @@ public class Menu {
 				PreparedStatement pS2 = jdbc.getConnection().prepareStatement("INSERT INTO Inscription (uidActivite,uidCentre,mail,dateDebut,dateFin) VALUES (?,?,?,?,?)");
 				pS2.setString(1,String.format("%010d", activiteList.get(i-1).getUid()));
 				pS2.setString(2,String.format("%010d", activiteList.get(i-1).getCentre()));
-				System.out.println(String.format("%010d", activiteList.get(i-1).getCentre())+String.format("%010d", activiteList.get(i-1).getUid()));
 				pS2.setString(3,stagiaire.getMail());
 				pS2.setDate(4, debut);
 				pS2.setDate(5, fin);
@@ -731,6 +730,7 @@ public class Menu {
 	
 	//OK
 	public static void getStagiaires(){
+		stagiaireList.clear();
 		PreparedStatement pS;
 		try{
 			//On r�cup�re la liste des mails des stagiaires
@@ -768,7 +768,7 @@ public class Menu {
 	public static void getSeances(){
 		PreparedStatement pS;
 		String activite;
-		
+		seanceList.clear();
 		try{
 			pS = jdbc.getConnection().prepareStatement("SELECT * FROM Seance WHERE uidCentre=?");
 			pS.setString(1, String.format("%010d", uidCentre));
@@ -794,6 +794,7 @@ public class Menu {
 	//OK
 	public static void getCentres(){
 		PreparedStatement pS;
+		centreList.clear();
 		try{
 			pS = jdbc.getConnection().prepareStatement("SELECT * FROM Centre");
 			ResultSet rS = pS.executeQuery();
@@ -832,7 +833,7 @@ public class Menu {
 	public static void getMateriel(){
 		PreparedStatement pS;
 		String activite;
-		
+		materielList.clear();
 		try{
 			pS = jdbc.getConnection().prepareStatement("SELECT * FROM Materiel WHERE uidCentre=?");
 			pS.setString(1, String.format("%010d", uidCentre));
@@ -859,6 +860,7 @@ public class Menu {
 	
 	public static void getGroupe(){
 		PreparedStatement pS;
+		groupeList.clear();
 		try{
 			pS = jdbc.getConnection().prepareStatement("SELECT * FROM Groupe");
 			ResultSet rS = pS.executeQuery();
@@ -1015,8 +1017,34 @@ public class Menu {
 		
 	public static void planifierSeance(Seance seance){
 		
+		PreparedStatement pS;
+		try{
+			pS = jdbc.getConnection().prepareStatement("INSERT INTO Seance (uidSeance,uidActivite,uidCentre,uidGroupe,dateSeance,heureDebut,duree) VALUES (?,?,?,?,?,?,?");
+			pS.setString(1, String.format("%010d", seance.getNumSeance()));
+			pS.setString(2, String.format("%010d", seance.getActivite()));
+			pS.setString(3, String.format("%010d", uidCentre));
+			pS.setString(4, String.format("%010d", seance.getGroupe()));
+			java.sql.Date date = new java.sql.Date(seance.getDate().getAnnee(), seance.getDate().getMois(), seance.getDate().getJour());
+			pS.setDate(5, date);
+			pS.setInt(6, seance.getDate().getHeure());
+			pS.setInt(7, seance.getDuree());
+			ResultSet rS = pS.executeQuery();
+			
+			for(String m: seance.getMoniteurs()){
+				pS = jdbc.getConnection().prepareStatement("INSERT INTO Encadre (uidSeance,uidActivite,uidCentre,mail) VALUES (?,?,?,?");
+				pS.setString(1, String.format("%010d", seance.getNumSeance()));
+				pS.setString(2, String.format("%010d", seance.getActivite()));
+				pS.setString(3, String.format("%010d", uidCentre));
+				pS.setString(4, m);
+				rS = pS.executeQuery();
+			}
+			System.out.println("\n[OK] S�ance planifi�e\n");
+		
+		}
+		catch(Exception e){
+			
+		}
 		//verif qu'il n'y a pas de conflit au niveau des dates
-		System.out.println("\n[OK] S�ance planifi�e\n");
 	}
 	
 	//OK
@@ -1024,6 +1052,7 @@ public class Menu {
 		int i = 1;
 		for(Groupe g:groupeList){
 			System.out.println("["+i+"]"+g.toString());
+			i++;
 		}
 	}
 	
