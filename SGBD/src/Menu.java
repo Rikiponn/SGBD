@@ -1311,5 +1311,9 @@ public class Menu {
 	public static String getActiviteNameByNumber(int i){
 		return activiteList.get(i).getNom();
 	}
+	
+	public void testGit(){
+		
+	}
 
 }
