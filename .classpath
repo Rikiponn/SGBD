@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="SGBD/src"/>
+	<classpathentry kind="lib" path="D:/Téléchargements/cs440 (1)/SGBD/ojdbc7.jar"/>
+	<classpathentry kind="output" path="SGBD/bin"/>
+</classpath>
