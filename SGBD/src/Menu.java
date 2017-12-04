@@ -549,7 +549,6 @@ public class Menu {
 				PreparedStatement pS2 = jdbc.getConnection().prepareStatement("INSERT INTO Inscription (uidActivite,uidCentre,mail,dateDebut,dateFin) VALUES (?,?,?,?,?)");
 				pS2.setString(1,String.format("%010d", activiteList.get(i-1).getUid()));
 				pS2.setString(2,String.format("%010d", activiteList.get(i-1).getCentre()));
-				System.out.println(String.format("%010d", activiteList.get(i-1).getCentre())+String.format("%010d", activiteList.get(i-1).getUid()));
 				pS2.setString(3,stagiaire.getMail());
 				pS2.setDate(4, debut);
 				pS2.setDate(5, fin);
@@ -1022,6 +1021,7 @@ public class Menu {
 		int i = 1;
 		for(Groupe g:groupeList){
 			System.out.println("["+i+"]"+g.toString());
+			i++;
 		}
 	}
 	
