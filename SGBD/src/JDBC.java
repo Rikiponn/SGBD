@@ -10,7 +10,17 @@ public class JDBC {
 	
 	private JDBC() throws SQLException, ClassNotFoundException{
 		Class.forName("oracle.jdbc.driver.OracleDriver");
-
+		
+		ParserXPath xpath = new ParserXPath();
+		ArrayList<String> str = new ArrayList<String>();
+		try {
+			str = xpath.getInfo();
+		} catch (Exception e) {
+			
+		}
+		String url = str.get(1);
+		String user = str.get(2);
+		String mdp = str.get(3);
 		try {
 		String url = "jdbc:oracle:thin:@localhost:1521/xe";
 		String user = "timothee";
