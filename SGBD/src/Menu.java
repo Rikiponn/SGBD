@@ -520,6 +520,7 @@ public class Menu {
 		try{
 			pS = jdbc.getConnection().prepareStatement("INSERT INTO Adresse (uidAdresse,numero,rue,codePostal,ville) VALUES (?,?,?,?,?)");
 			pS.setString(1, String.format("%010d", stagiaire.getAdresse().getUid()));
+			System.out.println(String.format("%010d", stagiaire.getAdresse().getUid()));
 			pS.setString(2, Integer.toString(stagiaire.getAdresse().getNum()));
 			pS.setString(3, stagiaire.getAdresse().getRue());
 			pS.setString(4, stagiaire.getAdresse().getCodePostal());
