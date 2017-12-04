@@ -1075,7 +1075,7 @@ public class Menu {
 			stock+=qte;
 			pS = jdbc.getConnection().prepareStatement("UPDATE Materiel SET stock=? WHERE uidMateriel=?");
 			pS.setInt(1, stock);
-			pS.setString(2, Integer.toString(materielList.get(num-1).getUid()));
+			pS.setString(2, String.format("%010d",materielList.get(num-1).getUid()));
 			rS = pS.executeQuery();
 			System.out.println("\n[OK] Mat�riel ajout�\n");
 		}
