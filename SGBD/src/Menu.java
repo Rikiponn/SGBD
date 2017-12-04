@@ -1336,8 +1336,4 @@ public class Menu {
 		return activiteList.get(i).getNom();
 	}
 	
-	public void testGit(){
-		
-	}
-
 }
