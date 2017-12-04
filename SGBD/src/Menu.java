@@ -659,7 +659,7 @@ public class Menu {
 		try{
 			pS = jdbc.getConnection().prepareStatement("SELECT mail FROM Moniteur NATURAL JOIN Habilite_a_encadrer WHERE uidCentre=? AND uidActivite=?");
 			pS.setString(1, String.format("%010d", uidCentre));
-			pS.setString(2, Integer.toString(activiteList.get(activite).getUid()));
+			pS.setString(2, String.format("%010d",activiteList.get(activite).getUid()));
 			ResultSet rS = pS.executeQuery();
 			while(rS.next()){				
 				ajouteMoniteurList(moniteurList, rS.getString("mail"));
@@ -936,7 +936,7 @@ public class Menu {
 		try{
 			//On r�cup�re tous les stagiaires qui appartiennent au groupe
 			pS = jdbc.getConnection().prepareStatement("SELECT * FROM Appartient_au_groupe WHERE uidGroupe=?");
-			pS.setString(1, Integer.toString(groupeList.get(numero).getUid()));
+			pS.setString(1, String.format("%010d",groupeList.get(numero).getUid()));
 			rS = pS.executeQuery();
 			//Pour chacun de ces stagiaires
 			while(rS.next()){
@@ -958,7 +958,7 @@ public class Menu {
 			}
 			
 			pS = jdbc.getConnection().prepareStatement("SELECT uidSeance FROM Seance WHERE uidGroupe=?");
-			pS.setString(1, Integer.toString(groupeList.get(numero).getUid()));
+			pS.setString(1,String.format("%010d",groupeList.get(numero).getUid()));
 			rS = pS.executeQuery();
 			
 			//On supprime toutes les occurences des s�ances concern�es par ce groupe dans la table Encadre
@@ -970,15 +970,15 @@ public class Menu {
 			
 			//On supprime les s�ances auxquelles le groupe participait
 			pS = jdbc.getConnection().prepareStatement("DELETE FROM Seance WHERE uidGroupe=?");
-			pS.setString(1, Integer.toString(groupeList.get(numero).getUid()));
+			pS.setString(1, String.format("%010d",groupeList.get(numero).getUid()));
 			rS = pS.executeQuery();
 
 			//On supprime le groupe
 			pS = jdbc.getConnection().prepareStatement("DELETE FROM Groupe WHERE uidGroupe=?");
-			pS.setString(1, Integer.toString(groupeList.get(numero).getUid()));
+			pS.setString(1, String.format("%010d",groupeList.get(numero).getUid()));
 			rS = pS.executeQuery();
 			pS = jdbc.getConnection().prepareStatement("DELETE FROM Appartient_au_groupe WHERE uidGroupe=?");
-			pS.setString(1, Integer.toString(groupeList.get(numero).getUid()));
+			pS.setString(1, String.format("%010d",groupeList.get(numero).getUid()));
 			rS = pS.executeQuery();
 		}
 		catch(Exception e){
@@ -1043,7 +1043,7 @@ public class Menu {
 		ResultSet rS;
 		try{
 			pS = jdbc.getConnection().prepareStatement("SELECT stock FROM Materiel WHERE uidMateriel=?");
-			pS.setString(1, Integer.toString(materielList.get(num).getUid()));
+			pS.setString(1, String.format("%010d",materielList.get(num).getUid()));
 			rS = pS.executeQuery();
 			int stock = rS.getInt("stock");
 			stock+=qte;
@@ -1065,18 +1065,18 @@ public class Menu {
 		ResultSet rS;
 		try{
 			pS=jdbc.getConnection().prepareStatement("SELECT stock FROM Materiel WHERE uidMateriel=?");
-			pS.setString(1, Integer.toString(materielList.get(idMatos).getUid()));
+			pS.setString(1, String.format("%010d",materielList.get(idMatos).getUid()));
 			rS = pS.executeQuery();
 			int nouveauStock = rS.getInt("stock")-quantite;
 			if( nouveauStock <= 0){
 				pS = jdbc.getConnection().prepareStatement("DELETE FROM Materiel WHERE uidMateriel=?");
-				pS.setString(1, Integer.toString(materielList.get(idMatos).getUid()));
+				pS.setString(1, String.format("%010d",materielList.get(idMatos).getUid()));
 				rS = pS.executeQuery();
 			}
 			else{
 				pS = jdbc.getConnection().prepareStatement("UPDATE Materiel SET stock=? WHERE uidMateriel=?");
 				pS.setInt(1, nouveauStock);
-				pS.setString(2, Integer.toString(materielList.get(idMatos).getUid()));
+				pS.setString(2, String.format("%010d",materielList.get(idMatos).getUid()));
 				rS = pS.executeQuery();
 			}
 			System.out.println("\n[OK] Mat�riel supprim�\n");
@@ -1093,7 +1093,7 @@ public class Menu {
 		ResultSet rS;
 		try{
 			pS = jdbc.getConnection().prepareStatement("INSERT INTO Emprunt_materiel (uidMateriel,uidCentre,uidSeance,uidActivite,quantite) VALUES (?,?,?,?)");
-			pS.setString(1, Integer.toString((materielList.get(idMatos).getUid())));
+			pS.setString(1, String.format("%010d",(materielList.get(idMatos).getUid())));
 			pS.setString(2, String.format("%010d", uidCentre));
 			pS.setString(3, Integer.toString(seanceList.get(seance).getNumSeance()));
 			pS.setString(4, Integer.toString(seanceList.get(seance).getActivite()));
@@ -1114,15 +1114,15 @@ public class Menu {
 		try{
 			pS = jdbc.getConnection().prepareStatement("INSERT INTO Moniteur (mail,uidBadge) VALUES (?,?)");
 			pS.setString(1, moniteur.getMail());
-			pS.setString(2, Integer.toString(moniteur.getBadge().getUid()));
+			pS.setString(2, String.format("%010d",moniteur.getBadge().getUid()));
 			rS = pS.executeQuery();
 			pS = jdbc.getConnection().prepareStatement("INSERT INTO Badge (uidBadge,validite) VALUES (?,?)");
-			pS.setString(1, Integer.toString(moniteur.getBadge().getUid()));
+			pS.setString(1, String.format("%010d",moniteur.getBadge().getUid()));
 			java.sql.Date date = new java.sql.Date(moniteur.getBadge().getValidite().getAnnee(), moniteur.getBadge().getValidite().getMois(), moniteur.getBadge().getValidite().getJour());
 			pS.setDate(2, date);
 			rS = pS.executeQuery();
 			for(int i:moniteur.getHabilite()){
-				String uidAc = Integer.toString(activiteList.get(i).getUid());
+				String uidAc = String.format("%010d",activiteList.get(i).getUid());
 				pS = jdbc.getConnection().prepareStatement("INSERT INTO Habilite_a_encadrer (uidActivite,uidCentre,mail) VALUES (?,?,?)");
 				pS.setString(1, uidAc);
 				pS.setString(2, String.format("%010d", uidCentre));
