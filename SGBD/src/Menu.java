@@ -928,7 +928,7 @@ public class Menu {
 		try{
 			pS = jdbc.getConnection().prepareStatement("INSERT INTO Groupe (uidGroupe,niveau) VALUES (?,?)");
 			getGroupe();
-			pS.setString(1, Integer.toString(groupeList.size()+1));
+			pS.setString(1, String.format("%010d", groupeList.size()+1));
 			if(niveau == 1){
 				pS.setString(2, "Debutant");
 			}
