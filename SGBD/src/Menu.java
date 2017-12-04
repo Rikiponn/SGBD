@@ -285,7 +285,7 @@ public class Menu {
 				System.out.println("Ajoutez un moniteur pour cette s�ance (identifi� par son adresse mail)");
 				afficheMoniteur();
 				int numMoniteur = sc.nextInt();
-				String mail = moniteurList.get(numMoniteur);
+				String mail = moniteurList.get(numMoniteur-1);
 				seance.addMoniteur(mail);
 				System.out.println("Ajouter un moniteur suppl�mentaire?\n[1]Oui\n[2]Non");
 				plusMoniteur = sc.nextInt();
@@ -317,19 +317,20 @@ public class Menu {
 							System.out.println("Indiquez la quantit� � ajouter");
 							int qte = sc.nextInt();
 							ajoutMateriel(materiel, qte);
+						}else {
+							System.out.println("Indiquez le type de materiel");
+							String type = sc.next();
+							System.out.println("Indiquez la marque");
+							String marque = sc.next();
+							System.out.println("Indiquez le mod�le");
+							String modele = sc.next();
+							System.out.println("Indiquez le niveau\n[1]D�butant\n[2]Confirm�\n[3]Expert");
+							int niveau = sc.nextInt();
+							System.out.println("Indiquez la quantite de materiel � ajouter");
+							int qte = sc.nextInt();
+							Materiel matos = new Materiel(type, marque, modele, niveau, qte);
+							ajoutMateriel(matos);
 						}
-						System.out.println("Indiquez le type de materiel");
-						String type = sc.next();
-						System.out.println("Indiquez la marque");
-						String marque = sc.next();
-						System.out.println("Indiquez le mod�le");
-						String modele = sc.next();
-						System.out.println("Indiquez le niveau\n[1]D�butant\n[2]Confirm�\n[3]Expert");
-						int niveau = sc.nextInt();
-						System.out.println("Indiquez la quantite de materiel � ajouter");
-						int qte = sc.nextInt();
-						Materiel matos = new Materiel(type, marque, modele, niveau, qte);
-						ajoutMateriel(matos);
 						
 						System.out.println("Ajouter encore du mat�riel?\n[1]Oui\n[2]Non");
 						encore = sc.nextInt();
@@ -810,7 +811,7 @@ public class Menu {
 						adr = new Adresse(0,rS2.getString("rue"), rS2.getString("codePostal"), rS2.getString("ville"));
 					}
 					finally {
-						adr = new Adresse(Integer.parseInt(rS2.getString("numero")),rS2.getString("rue"), rS2.getString("codePostal"), rS2.getString("ville"));
+						adr = new Adresse(rS2.getString("rue"), rS2.getString("codePostal"), rS2.getString("ville"));
 					}
 
 					adr.setUid(Integer.parseInt(rS2.getString("uidAdresse")));
@@ -1075,7 +1076,7 @@ public class Menu {
 		ResultSet rS;
 		try{
 			pS = jdbc.getConnection().prepareStatement("INSERT INTO Materiel (uidMateriel,uidCentre,type,marque,modele,niveau,stock) VALUES (?,?,?,?,?,?,?)");
-			pS.setString(1, Integer.toString(materielList.size()+1));
+			pS.setString(1, String.format("%010d",materielList.size()+1));
 			pS.setString(2, String.format("%010d", uidCentre));
 			pS.setString(3, materiel.type);
 			pS.setString(4, materiel.marque);
@@ -1097,13 +1098,13 @@ public class Menu {
 		ResultSet rS;
 		try{
 			pS = jdbc.getConnection().prepareStatement("SELECT stock FROM Materiel WHERE uidMateriel=?");
-			pS.setString(1, String.format("%010d",materielList.get(num).getUid()));
+			pS.setString(1, String.format("%010d",materielList.get(num-1).getUid()));
 			rS = pS.executeQuery();
 			int stock = rS.getInt("stock");
 			stock+=qte;
 			pS = jdbc.getConnection().prepareStatement("UPDATE Materiel SET stock=? WHERE uidMateriel=?");
 			pS.setInt(1, stock);
-			pS.setString(2, Integer.toString(materielList.get(num).getUid()));
+			pS.setString(2, Integer.toString(materielList.get(num-1).getUid()));
 			rS = pS.executeQuery();
 			System.out.println("\n[OK] Mat�riel ajout�\n");
 		}
