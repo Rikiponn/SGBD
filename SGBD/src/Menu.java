@@ -497,13 +497,15 @@ public class Menu {
 	
 	public static void getAdresses() {
 		PreparedStatement pS;
+		adresseList.clear();
 		try {
-			pS = jdbc.getConnection().prepareStatement("SELECT * FROM Adresse");
+			pS = jdbc.getConnection().prepareStatement("SELECT * FROM Adresse WHERE codepostal='26000'");
 			ResultSet rS = pS.executeQuery();
-			adresseList.clear();
+			
 			while(rS.next()) {
 				Adresse adr = new Adresse(Integer.parseInt(rS.getString("numero")), rS.getString("rue"), rS.getString("codePostal"), rS.getString("ville"));
 				adr.setUid(Integer.parseInt(rS.getString("uidAdresse")));
+				System.out.println(rS.getString("uidAdresse"));
 				
 				ajouteAdresseList(adresseList, adr);
 			}
@@ -673,10 +675,11 @@ public class Menu {
 	
 	public static void getMoniteur(int activite){
 		PreparedStatement pS;
+		moniteurList.clear();
 		try{
 			pS = jdbc.getConnection().prepareStatement("SELECT mail FROM Moniteur NATURAL JOIN Habilite_a_encadrer WHERE uidCentre=? AND uidActivite=?");
 			pS.setString(1, String.format("%010d", uidCentre));
-			pS.setString(2, String.format("%010d",activiteList.get(activite).getUid()));
+			pS.setString(2, String.format("%010d",activiteList.get(activite-1).getUid()));
 			ResultSet rS = pS.executeQuery();
 			while(rS.next()){				
 				ajouteMoniteurList(moniteurList, rS.getString("mail"));
@@ -698,6 +701,7 @@ public class Menu {
 	
 	//OK
 	public static void getActivites(){
+		activiteList.clear();
 		PreparedStatement pS;
 		try{
 			pS = jdbc.getConnection().prepareStatement("SELECT * FROM Activite WHERE uidCentre=?");
